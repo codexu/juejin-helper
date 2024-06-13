@@ -35,7 +35,7 @@ export default ({ mode }) => {
     },
     base: loadEnv(mode, process.cwd()).VITE_PUBLIC_PATH,
     server: {
-      port: 8080,
+      port: 8101,
       open: true,
       cors: true,
     },

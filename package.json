@@ -1,5 +1,5 @@
 {
-  "name": "juejin-help",
+  "name": "juejin-helper",
   "private": true,
   "scripts": {
     "build": "turbo build",
