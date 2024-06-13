@@ -23,7 +23,6 @@ export class ArticleService {
     // 循环爬取 5 页
     for (let pageNo = 1; pageNo <= 5; pageNo += 1) {
       await gotoWithRetries(page, `${url}${pageNo}`);
-      console.log(`${url}${pageNo}`);
       await page.waitForSelector('.list-group');
       const list = await page.$$eval('.list-group .item-wrap', (nodes) => {
         const result: { title: string; articleId: string }[] = [];

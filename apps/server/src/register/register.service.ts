@@ -32,7 +32,6 @@ export class RegisterService {
         },
       }),
     );
-    console.log(data);
     return data;
   }
 
@@ -51,7 +50,6 @@ export class RegisterService {
     const blackList = ['16', '17', '19'];
     const isBlack = blackList.includes(`${data}`.substring(0, 2));
     if (isBlack || blackPhone.includes(`${data}`)) {
-      console.log(count, '不可用', data);
       this.getPhone(token);
       blackPhone.push(data);
     } else {

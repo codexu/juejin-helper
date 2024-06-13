@@ -13,7 +13,9 @@ import { ManualService } from 'src/manual/manual.service';
 import { InfoService } from './info.service';
 import { UserCaptchaService } from 'src/user/userCaptcha.service';
 import { ProfileService } from './profile.service';
+import { LogService } from './log.service';
 import { HttpModule } from '@nestjs/axios';
+import { AccountLogSubscriber } from './account.subscriber';
 
 @Module({
   imports: [
@@ -26,6 +28,7 @@ import { HttpModule } from '@nestjs/axios';
   controllers: [AccountController],
   providers: [
     AccountService,
+    AccountLogSubscriber,
     AccountAuthService,
     ProfileService,
     AuthAdminGuard,
@@ -33,6 +36,7 @@ import { HttpModule } from '@nestjs/axios';
     ManualService,
     InfoService,
     UserCaptchaService,
+    LogService,
   ],
   exports: [AccountService, AccountAuthService],
 })

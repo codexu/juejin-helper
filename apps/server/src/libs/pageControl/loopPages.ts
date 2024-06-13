@@ -23,7 +23,7 @@ export default async function loopPages(
     if (accounts[index].cookie) {
       await setCookie(page, accounts[index].cookie);
     }
-    console.log(`正在处理第 ${index + 1} / ${accounts.length} 个账号`);
+    console.info(`正在处理第 ${index + 1} / ${accounts.length} 个账号`);
     await fn(page, index);
     // 清理 cookie
     await page.deleteCookie();

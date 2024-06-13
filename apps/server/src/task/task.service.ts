@@ -82,7 +82,7 @@ export class TaskService {
           .getOne();
 
         if (!account) {
-          throw new Error('账号不存在');
+          console.error('账号不存在');
         }
         const data = await this.getTaskList(account);
         observer.next({ data });
