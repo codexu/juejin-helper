@@ -56,19 +56,24 @@ const params = {
   page: '1',
   pageSize: '5',
 };
-const sseUrl = `${VITE_APP_BASE_URL}account/accountLog?${new URLSearchParams(
+const sseUrl = `${VITE_APP_BASE_URL}account/realTimeAccountLog?${new URLSearchParams(
   params,
 ).toString()}`;
 function formatDate(date: string) {
   return dayjs(date).fromNow();
 }
 
+const eventSource = new EventSource(sseUrl);
+
 onMounted(() => {
-  const eventSource = new EventSource(sseUrl);
   eventSource.onmessage = (event) => {
     const data = JSON.parse(event.data);
     logs.value = data.records;
     total.value = data.total;
   };
+});
+
+onUnmounted(() => {
+  eventSource.close();
 });
 </script>

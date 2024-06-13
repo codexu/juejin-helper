@@ -94,14 +94,29 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '查询日志信息' })
-  @Sse('accountLog')
+  @Sse('realTimeAccountLog')
   // 分页获取日志
-  accountLog(
+  realTimeAccountLog(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
     @Query('type') type: string,
   ) {
     return this.logService.onLogInsert(page, pageSize, type);
+  }
+
+  @ApiOperation({ summary: '查询日志信息' })
+  @Get('accountLog')
+  // 分页获取日志
+  async accountLog(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('type') type: string,
+  ) {
+    const data = await this.logService.getAccountLog(page, pageSize, type);
+    return {
+      data,
+      message: '查询成功',
+    };
   }
 
   @ApiOperation({ summary: '已读日志' })
