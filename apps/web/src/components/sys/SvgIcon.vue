@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts" name="svg-icon">
 import { computed, withDefaults } from 'vue';
 
 interface Props {

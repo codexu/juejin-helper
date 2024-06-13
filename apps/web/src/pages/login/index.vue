@@ -37,10 +37,10 @@ meta:
       <div class="flex flex-1 p-10 pb-24 items-center justify-center flex-col relative">
         <h1 class="text-2xl text-center font-bold py-4">
           <like-two-tone />
-          掘鑫互吹
+          掘金代练
         </h1>
         <div class="w-full">
-          <a-divider>稀土掘鑫专业刷赞平台</a-divider>
+          <a-divider>稀土掘金专业刷赞平台</a-divider>
         </div>
         <div class="flex flex-1 items-center justify-center flex-col w-full">
           <QrLogin v-if="loginType === 'qr'" :shareId="shareId" />

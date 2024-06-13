@@ -11,7 +11,7 @@
     "
   >
     <like-two-tone />
-    掘鑫互吹
+    掘金代练
   </h1>
 </template>
 <script lang="ts" setup>
