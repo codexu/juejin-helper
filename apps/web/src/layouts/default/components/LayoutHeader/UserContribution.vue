@@ -30,7 +30,12 @@
     <div class="flex justify-center items-center cursor-pointer">
       <crown-two-tone style="font-size: 24px" class="mr-2" />
       <a-statistic
-        valueStyle="font-size: 18px; font-weight: bold; transform: translateY(2px); color: rgba(0, 0, 0, 0.65);"
+        style="
+          font-size: 18px;
+          font-weight: bold;
+          transform: translateY(2px);
+          color: rgba(0, 0, 0, 0.65);
+        "
         :value="store.state.contribution"
       />
     </div>

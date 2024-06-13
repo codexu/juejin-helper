@@ -45,34 +45,30 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs';
 import device from 'current-device';
-import { getLog, Log } from '@/api/log';
+import { Log } from '@/api/log';
 // 判断是否是移动端
 const isMobile = device.mobile();
 const logs = ref<Log[]>([]);
 const total = ref(0);
-let interval: number | null = null;
 
+const { VITE_APP_BASE_URL } = import.meta.env;
+const params = {
+  page: '1',
+  pageSize: '5',
+};
+const sseUrl = `${VITE_APP_BASE_URL}account/accountLog?${new URLSearchParams(
+  params,
+).toString()}`;
 function formatDate(date: string) {
   return dayjs(date).fromNow();
 }
 
-async function fetchData() {
-  await getLog(1, 5).then((res) => {
-    logs.value = res.data.records;
-    total.value = res.data.total;
-  });
-  interval = setTimeout(() => {
-    fetchData();
-  }, 2000);
-}
-
 onMounted(() => {
-  fetchData();
-});
-
-onUnmounted(() => {
-  if (interval !== null) {
-    clearTimeout(interval);
-  }
+  const eventSource = new EventSource(sseUrl);
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    logs.value = data.records;
+    total.value = data.total;
+  };
 });
 </script>

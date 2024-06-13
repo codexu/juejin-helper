@@ -6,6 +6,7 @@ import {
   Query,
   UseGuards,
   Headers,
+  Sse,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { AccountService } from './account.service';
@@ -14,6 +15,7 @@ import { AuthAdminGuard } from 'src/common/guards/authAdmin.guard';
 import { CheckService } from './check.service';
 import { InfoService } from './info.service';
 import { ProfileService } from './profile.service';
+import { LogService } from './log.service';
 
 @ApiTags('账号管理')
 @Controller('account')
@@ -23,6 +25,7 @@ export class AccountController {
     private readonly checkService: CheckService,
     private readonly profileService: ProfileService,
     private readonly infoService: InfoService,
+    private readonly logService: LogService,
   ) {}
 
   @ApiOperation({ summary: '单独访问账号（本地服务）' })
@@ -91,25 +94,21 @@ export class AccountController {
   }
 
   @ApiOperation({ summary: '查询日志信息' })
-  @Get('accountLog')
+  @Sse('accountLog')
   // 分页获取日志
-  async accountLog(
+  accountLog(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
     @Query('type') type: string,
   ) {
-    const data = await this.accountService.getAccountLog(page, pageSize, type);
-    return {
-      data,
-      message: '查询成功',
-    };
+    return this.logService.onLogInsert(page, pageSize, type);
   }
 
   @ApiOperation({ summary: '已读日志' })
   @Post('readLog')
   @ApiBody({ type: ReadLogDto })
   async readLog(@Body() readLogDto: ReadLogDto) {
-    const data = await this.accountService.readLog(readLogDto.ids);
+    const data = await this.logService.readLog(readLogDto.ids);
     return {
       data,
       message: '已读成功',

@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-
+import { Repository } from 'typeorm';
 import { Account } from 'src/entities/account.entity';
 import { UserInfo } from 'src/entities/userinfo.entity';
-import { AccountLog } from 'src/entities/accountLog.entity';
-
 import { setCookie } from 'src/libs/cookie';
-
 import browserInit from 'src/libs/browserInit';
 import { UserCaptchaService } from 'src/user/userCaptcha.service';
-
 import { catchError, concat, of } from 'rxjs';
 import { Cron } from '@nestjs/schedule';
 
@@ -31,8 +26,6 @@ export class AccountService {
   constructor(
     @InjectRepository(Account)
     private accountRepository: Repository<Account>,
-    @InjectRepository(AccountLog)
-    private readonly accountLogRepository: Repository<AccountLog>,
     @InjectRepository(UserInfo)
     private readonly userInfoRepository: Repository<UserInfo>,
     private readonly userCaptchaService: UserCaptchaService,
@@ -126,7 +119,7 @@ export class AccountService {
           );
         obs.push(ob);
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
     concat(...obs).subscribe({
@@ -134,44 +127,6 @@ export class AccountService {
         console.log(data);
       },
     });
-  }
-
-  // 分页获取日志，account 关联 userInfo
-  async getAccountLog(page = 1, pageSize = 10, type: string) {
-    const [data, total] = await this.accountLogRepository
-      .createQueryBuilder('accountLog')
-      .leftJoinAndSelect('accountLog.account', 'account')
-      .leftJoinAndSelect('account.userInfo', 'userInfo')
-      // type 如果存在则查询对应的日志
-      .where(type ? 'accountLog.type = :type' : '1=1', { type })
-      .orderBy('accountLog.createdAt', 'DESC')
-      .skip((page - 1) * pageSize)
-      .take(pageSize)
-      .getManyAndCount();
-
-    const records = data.map((log: AccountLog) => {
-      const account = log.account as unknown as Account;
-      const userInfo = account.userInfo as unknown as UserInfo;
-      const result = Object.assign({}, log, {
-        username: userInfo.username,
-        userId: userInfo.userId,
-        avatar: userInfo.avatar,
-      });
-      delete result.account;
-      return result;
-    });
-
-    return {
-      records: records,
-      page,
-      total,
-      pageSize,
-    };
-  }
-
-  // 已读日志
-  async readLog(ids: string[]) {
-    return this.accountLogRepository.update({ id: In(ids) }, { isRead: true });
   }
 
   // 导入账号
@@ -190,7 +145,7 @@ export class AccountService {
           );
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   }

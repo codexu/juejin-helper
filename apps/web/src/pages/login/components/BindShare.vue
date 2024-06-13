@@ -15,7 +15,7 @@
           :disabled="hasShareId"
           :maxlength="16"
           class="w-[400px] my-4"
-          placeholder="请输入分享码（掘鑫 ID）"
+          placeholder="请输入分享码（掘金 ID）"
         >
           <template #prefix>
             <user-outlined type="user" />

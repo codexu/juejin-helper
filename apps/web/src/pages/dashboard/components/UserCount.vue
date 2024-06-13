@@ -58,18 +58,14 @@ const option = {
       name: '全部账号',
       type: 'line',
       itemStyle: {
-        normal: {
-          color: '#7348FF',
-          barBorderRadius: 0,
-        },
+        color: '#7348FF',
+        barBorderRadius: 0,
       },
       areaStyle: {
         opacity: 1,
         itemStyle: {
-          normal: {
-            color: '#7348FF',
-            barBorderRadius: 0,
-          },
+          color: '#7348FF',
+          barBorderRadius: 0,
         },
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           {
@@ -87,10 +83,8 @@ const option = {
       name: '可用账号',
       type: 'line',
       itemStyle: {
-        normal: {
-          color: '#1298EB',
-          barBorderRadius: 0,
-        },
+        color: '#1298EB',
+        barBorderRadius: 0,
       },
       areaStyle: {
         opacity: 1,

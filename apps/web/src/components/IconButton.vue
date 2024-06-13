@@ -8,7 +8,7 @@
   </a-button>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup name="icon-button">
 const props = defineProps<{
   type?: 'primary' | 'warning' | 'success' | 'error';
   title?: string;

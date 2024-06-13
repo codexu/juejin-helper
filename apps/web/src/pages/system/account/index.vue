@@ -24,7 +24,7 @@ meta:
             <a-space :size="10">
               <a-badge v-if="!record.state">
                 <template #count>
-                  <clock-circle-outlined style="color: #f5222d" />
+                  <ClockCircleOutlined style="color: #f5222d" />
                 </template>
                 <a-avatar :src="record.avatar" :size="24" />
               </a-badge>

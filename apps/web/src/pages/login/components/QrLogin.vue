@@ -33,7 +33,7 @@ onMounted(() => {
     switch (data.progress) {
       case 'qrcode':
         qrcode.value = data.qrcodeImg;
-        loadingTip.value = '请使用掘鑫APP扫码登录';
+        loadingTip.value = '请使用掘金APP扫码登录';
         break;
       case 'success':
         loadingTip.value = '登录成功';
