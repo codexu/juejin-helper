@@ -48,8 +48,6 @@ export class LogService {
       return result;
     });
 
-    console.log(records);
-
     return {
       records: records,
       page,

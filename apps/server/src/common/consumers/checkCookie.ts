@@ -25,7 +25,7 @@ export class CheckCookieConsumer {
     await loopPages(accounts, async (page, index) => {
       await setCookie(page, accounts[index].cookie);
       await page.goto('https://juejin.cn/');
-      const { state } = await checkLoginState(page, 2000);
+      const { state } = await checkLoginState(page, 20000);
       const { username, userId } = accounts[index].userInfo;
 
       if (!state) {
