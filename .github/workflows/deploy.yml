@@ -37,5 +37,5 @@ jobs:
             cd /home/ecs-user/juejin-helper/
             pnpm install
             pnpm run build
-            cd apps/server/
+            cd /home/ecs-user/juejin-helper/apps/server/
             pm2 start ecosystem.config.js
