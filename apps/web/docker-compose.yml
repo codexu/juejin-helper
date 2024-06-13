@@ -1,0 +1,13 @@
+version: '3'
+services:
+  praising-web:
+    image: praising-web
+    container_name: praising-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    volumes:
+      - /apps/jenkins/home/jenkins_home/workspace/praising-web/dist:/usr/share/nginx/html
+      - /apps/jenkins/home/jenkins_home/workspace/praising-web/nginx.conf:/etc/nginx/nginx.conf
