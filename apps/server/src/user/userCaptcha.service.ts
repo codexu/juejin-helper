@@ -28,14 +28,14 @@ export class UserCaptchaService {
         });
         const { page, destroy } = await browserInit('new', true);
         await page.goto('https://juejin.cn/login');
+        observer.next({
+          data: { message: '正在进入输入账号密码', type: 'success' },
+        });
         await page.waitForSelector('.other-login-box .clickable');
         await page.click('.other-login-box .clickable');
         await page.waitForSelector(
           '.input-group input[name="loginPhoneOrEmail"]',
         );
-        observer.next({
-          data: { message: '正在进入输入账号密码', type: 'success' },
-        });
         await page.type(
           '.input-group input[name="loginPhoneOrEmail"]',
           account,
@@ -108,6 +108,7 @@ export class UserCaptchaService {
             { id: hasUser.id },
             { cookie, account, password },
           );
+          await this.userInfoRepository.save(userInfo);
         } else {
           observer.next({
             data: { message: '正在创建用户', type: 'success' },

@@ -5,7 +5,6 @@ import Bull, { Queue } from 'bull';
 import { AutomateService } from 'src/automate/automate.service';
 import { Account } from 'src/entities/account.entity';
 import { Repository } from 'typeorm';
-import { OnEvent } from '@nestjs/event-emitter';
 import { Observable, Subscriber } from 'rxjs';
 
 @Injectable()
@@ -81,31 +80,30 @@ export class TaskService {
           .where('account.cookie = :cookie', { cookie: authorization })
           .getOne();
 
-        if (!account) {
-          console.error('账号不存在');
+        if (account) {
+          const data = await this.getTaskList(account);
+          observer.next({ data });
+          this.manualQueue.on('global:progress', async () => {
+            const data = await this.getTaskList(account);
+            observer.next({ data });
+          });
+          this.manualQueue.on('global:completed', async () => {
+            const data = await this.getTaskList(account);
+            observer.next({ data });
+          });
+          this.manualQueue.on('global:failed', async () => {
+            const data = await this.getTaskList(account);
+            observer.next({ data });
+          });
+          this.manualQueue.on('global:active', async () => {
+            const data = await this.getTaskList(account);
+            observer.next({ data });
+          });
+          this.manualQueue.on('global:waiting', async () => {
+            const data = await this.getTaskList(account);
+            observer.next({ data });
+          });
         }
-        const data = await this.getTaskList(account);
-        observer.next({ data });
-        this.manualQueue.on('global:progress', async () => {
-          const data = await this.getTaskList(account);
-          observer.next({ data });
-        });
-        this.manualQueue.on('global:completed', async () => {
-          const data = await this.getTaskList(account);
-          observer.next({ data });
-        });
-        this.manualQueue.on('global:failed', async () => {
-          const data = await this.getTaskList(account);
-          observer.next({ data });
-        });
-        this.manualQueue.on('global:active', async () => {
-          const data = await this.getTaskList(account);
-          observer.next({ data });
-        });
-        this.manualQueue.on('global:waiting', async () => {
-          const data = await this.getTaskList(account);
-          observer.next({ data });
-        });
       })();
     });
   }
