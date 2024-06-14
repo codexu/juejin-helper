@@ -124,7 +124,7 @@ export class AccountService {
     }
     concat(...obs).subscribe({
       next: (data) => {
-        console.log(data);
+        console.info(data);
       },
     });
   }
