@@ -47,8 +47,8 @@ export class AutomateService {
     private configService: ConfigService,
   ) {}
 
-  // 定时签到，每天4,5,6,7,8点签到，重复签到，防止漏签
-  @Cron('0 0 4,5,6,7,8 * * *', { name: 'autoSign', timeZone: 'Asia/Shanghai' })
+  // 定时签到，每天5,6,7,8点签到，重复签到，防止漏签
+  @Cron('0 0 5,6,7,8 * * *', { name: 'autoSign', timeZone: 'Asia/Shanghai' })
   async autoSign() {
     const accounts = await this.accountService.getAccountInfo();
     await loopPages(accounts, async (page, index) => {
@@ -57,7 +57,7 @@ export class AutomateService {
       if (!loginState.state) return;
       const isSign = await fetchSign(page);
       await gotoWithRetries(page, 'https://juejin.cn/user/center/lottery');
-      await page.waitForTimeout(1000);
+      await page.waitForTimeout(3000);
       const btn = await page.$('#turntable-item-0');
       const isFree = await btn.$('.text-free');
       if (isFree) {

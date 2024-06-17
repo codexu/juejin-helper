@@ -10,18 +10,18 @@
       </div>
       <a-space>
         <a-tooltip>
-          <template #title>检测全部账号是否可用</template>
+          <template #title>离线账号登录</template>
+          <team-outlined @click="handleGetCookie" />
+        </a-tooltip>
+        <a-divider type="vertical" />
+        <a-tooltip>
+          <template #title>检测账号状态</template>
           <alert-outlined @click="handleCheckCookie" />
         </a-tooltip>
         <a-divider type="vertical" />
         <a-tooltip>
           <template #title>爬取用户信息</template>
           <security-scan-outlined @click="handleQueryAccountInformation" />
-        </a-tooltip>
-        <a-divider type="vertical" />
-        <a-tooltip>
-          <template #title>系统账户手动登录（本地）</template>
-          <team-outlined @click="handleGetCookie" />
         </a-tooltip>
       </a-space>
     </div>

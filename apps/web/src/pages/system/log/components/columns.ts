@@ -10,7 +10,7 @@ export default [
     title: '用户名',
     dataIndex: 'username',
     key: 'username',
-    width: 220,
+    width: 280,
   },
   {
     title: '操作类型',

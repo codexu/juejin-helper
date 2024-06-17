@@ -14,13 +14,7 @@
       </template>
       <template v-else-if="column.key === 'username'">
         <a-space :size="10">
-          <a-badge v-if="!record.state">
-            <template #count>
-              <ClockCircleOutlined style="color: #f5222d" />
-            </template>
-            <a-avatar :src="record.avatar" :size="24" />
-          </a-badge>
-          <a-avatar v-else :src="record.avatar" :size="24" />
+          <a-avatar :src="record.avatar" :size="24" />
           <a :href="`https://juejin.cn/user/${record.userId}`" target="_blank">
             {{ record.username }}
           </a>
@@ -39,7 +33,6 @@
 </template>
 <script setup lang="ts">
 import dayjs from 'dayjs';
-import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import useStore from '../store';
 import columns from './columns';
 

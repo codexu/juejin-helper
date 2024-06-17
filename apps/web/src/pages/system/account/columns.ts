@@ -11,7 +11,7 @@ export default [
     title: '头像 / 用户 / ID',
     dataIndex: 'username',
     key: 'username',
-    width: 260,
+    width: 320,
     align: 'left',
     fixed: 'left',
   },

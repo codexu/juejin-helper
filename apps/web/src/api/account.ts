@@ -63,7 +63,7 @@ export function visitAccount(id: number) {
   });
 }
 
-// 手动获取 cookie （本地服务）
+// 离线账号登陆
 export function getCookie() {
   return request<Response<boolean>>({
     method: 'get',
