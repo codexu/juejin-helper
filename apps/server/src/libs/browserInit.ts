@@ -6,7 +6,7 @@ export default async function browserInit(
   imagesEnabled = false,
 ) {
   const browser = await puppeteer.launch({
-    headless: browserHeadless,
+    headless: false,
     defaultViewport: {
       width: 1600,
       height: 800,

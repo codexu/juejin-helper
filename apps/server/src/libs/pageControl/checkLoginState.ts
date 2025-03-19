@@ -14,6 +14,7 @@ export default async function (page: Page, timeout = 20000) {
     const username = await page.$eval('.user-card .username', (node) =>
       node.textContent.trim(),
     );
+    console.log('username', username);
     await page.click('.avatar-wrapper');
     return {
       state: true,

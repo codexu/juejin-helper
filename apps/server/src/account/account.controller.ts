@@ -16,6 +16,7 @@ import { CheckService } from './check.service';
 import { InfoService } from './info.service';
 import { ProfileService } from './profile.service';
 import { LogService } from './log.service';
+import { Account } from 'src/entities/account.entity';
 
 @ApiTags('账号管理')
 @Controller('account')
@@ -133,8 +134,9 @@ export class AccountController {
   // 将 json 账号导入数据库
   @ApiOperation({ summary: '导入账号' })
   @Post('importAccount')
-  async importAccount(@Body() body: any) {
+  async importAccount(@Body() body: Account[]) {
     const data = this.accountService.importAccount(body);
+    console.log(data);
     return {
       data,
       message: '开始导入',

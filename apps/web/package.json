@@ -6,7 +6,6 @@
     "build": "vue-tsc --noEmit && vite build",
     "staging": "vue-tsc --noEmit && vite build --mode staging",
     "serve": "vite preview --host",
-    "prepare": "husky install",
     "lint": ""
   },
   "dependencies": {

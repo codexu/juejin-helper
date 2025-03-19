@@ -4,7 +4,11 @@ import checkLoginState from './checkLoginState';
 // 签到
 export default async function fetchUserInfo(page: Page) {
   try {
-    await page.goto('https://juejin.cn/creator/data/content/article/entire');
+    // 浏览器指向 page
+    await page.waitForTimeout(1000);
+    await page.bringToFront();
+    console.log('获取用户信息');
+    await page.goto('https://juejin.cn/creator/home');
     // 获取未读信息
     await page.waitForSelector('.notification', {
       timeout: 5000,
@@ -12,6 +16,7 @@ export default async function fetchUserInfo(page: Page) {
     const notification = await page.$('.notification');
     // 判断是否存在 span.count
     const count = await notification.$('.count');
+    console.log('count', count);
     let unreadMessage = 0;
     if (count) {
       unreadMessage = await page.$eval(
@@ -21,7 +26,9 @@ export default async function fetchUserInfo(page: Page) {
         },
       );
     }
+    console.log('unreadMessage', unreadMessage);
     const loginState = await checkLoginState(page);
+    console.log('loginState', loginState);
     await page.click('.avatar-wrapper');
     if (!loginState.state) return;
     // 获取头像
@@ -29,12 +36,14 @@ export default async function fetchUserInfo(page: Page) {
     const avatar = await page.$eval('.avatar-wrapper img', (node) =>
       node.getAttribute('src'),
     );
+    console.log('avatar', avatar);
     // 获取用户 ID
     await page.waitForSelector('.drop-down-menu .dropdown-list .dropdown-item');
     await page.click('.drop-down-menu .dropdown-list .dropdown-item');
     await page.waitForNavigation();
     const url = await page.url();
     const userId = url.split('/').pop();
+    console.log('userId', userId);
     // 获取赞的数量
     await page.waitForSelector('.list-header .header-content div.nav-item');
     // 点击最后一个
@@ -51,20 +60,10 @@ export default async function fetchUserInfo(page: Page) {
         Number.parseInt(nodes[1].innerText.split(' ')[1]),
       ],
     );
-    // 获取文章信息
-    await page.goto('https://juejin.cn/creator/data/content/article/entire');
-    await page.waitForSelector('.card-warp .data-card div.data');
-    const articleInfo = await page.$$eval(
-      '.card-warp .data-card div.data',
-      (nodes) => nodes.map((node) => Number.parseInt(node.innerText)),
-    );
+    console.log('starNumber', starNumber);
+    const articleInfo = [0];
     // 获取沸点数据
-    await page.goto('https://juejin.cn/creator/data/content/pin/entire');
-    await page.waitForSelector('.card-warp .data-card div.data');
-    const pinInfo = await page.$$eval(
-      '.card-warp .data-card div.data',
-      (nodes) => nodes.map((node) => Number.parseInt(node.innerText)),
-    );
+    const pinInfo = [0];
     // 获取矿石数据
     await page.goto('https://juejin.cn/user/center/signin');
     await page.waitForSelector('.figures');
@@ -72,6 +71,7 @@ export default async function fetchUserInfo(page: Page) {
     const signinInfo = await page.$$eval('.figures span.figure', (nodes) =>
       nodes.map((node) => Number.parseInt(node.innerText)),
     );
+    console.log('signinInfo', signinInfo);
     return {
       username: loginState.username.trim(),
       userId,
