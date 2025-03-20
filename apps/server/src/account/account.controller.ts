@@ -135,8 +135,7 @@ export class AccountController {
   @ApiOperation({ summary: '导入账号' })
   @Post('importAccount')
   async importAccount(@Body() body: Account[]) {
-    const data = this.accountService.importAccount(body);
-    console.log(data);
+    const data = await this.accountService.importAccount(body);
     return {
       data,
       message: '开始导入',

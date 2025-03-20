@@ -20,6 +20,99 @@ export class UserCaptchaService {
   ) {}
 
   // 通过密码登录
+  async loginWithPasswordOnce(
+    account: string,
+    password: string,
+    shareId?: string,
+  ) {
+    const { page, destroy } = await browserInit('new', true);
+    await page.goto('https://juejin.cn/login');
+    await page.bringToFront();
+
+    await page.waitForSelector('.other-login-box .clickable');
+    await page.click('.other-login-box .clickable');
+    await page.waitForSelector('.input-group input[name="loginPhoneOrEmail"]');
+    await page.type('.input-group input[name="loginPhoneOrEmail"]', account);
+    await page.type('.input-group input[name="loginPassword"]', password);
+    await page.click('.btn-login');
+
+    // 等待 .vc_captcha_wrapper 下的 iframe 加载完成
+    await page.waitForSelector('iframe');
+    // 获取 iframe
+    const elementHandle = await page.$('iframe');
+    // 获取 iframe 的 contentWindow
+    const frame = await elementHandle.contentFrame();
+    try {
+      await this.handleDrag(page, frame);
+    } catch (error) {
+      destroy();
+      return;
+    }
+    // 获取 cookie
+    const userInfoData = await fetchUserInfo(page);
+    if (!userInfoData) {
+      destroy();
+      return;
+    }
+    const { username, userId, starNumber, articleInfo, pinInfo, avatar } =
+      userInfoData;
+    // userinfo 库 查询是否存在 userId
+    const hasUser = await this.accountRepository
+      .createQueryBuilder('account')
+      .leftJoinAndSelect('account.userInfo', 'userInfo')
+      .where('userInfo.userId = :userId', { userId })
+      .getOne();
+    const cookies = await page.cookies();
+    const cookie = cookiesToString(cookies);
+
+    const userInfo = {
+      username,
+      userId,
+      avatar,
+      contribution: 0,
+      userArticleLike: starNumber[0],
+      userPinLike: starNumber[1],
+      totalArticle: articleInfo[0],
+      articleShow: articleInfo[1],
+      articleRead: articleInfo[2],
+      articleLike: articleInfo[3],
+      articleComment: articleInfo[4],
+      articleCollect: articleInfo[5],
+      totalPin: pinInfo[0],
+      totalPinLike: pinInfo[1],
+      totalPinComment: pinInfo[2],
+    };
+
+    if (hasUser) {
+      await this.accountRepository.update(
+        { id: hasUser.id },
+        { cookie, account, password },
+      );
+      await this.userInfoRepository.save(userInfo);
+    } else {
+      if (shareId) {
+        userInfo.contribution += 500;
+        const sharedUser = await this.accountRepository
+          .createQueryBuilder('account')
+          .leftJoinAndSelect('account.userInfo', 'userInfo')
+          .where('userInfo.userId = :userId', { userId: shareId })
+          .getOne();
+        if (sharedUser) {
+          sharedUser.userInfo.contribution += 500;
+          await this.userInfoRepository.save(sharedUser.userInfo);
+        }
+      }
+      await this.accountRepository.save({
+        cookie,
+        account,
+        password,
+        userInfo,
+      });
+    }
+    destroy();
+  }
+
+  // 通过密码登录
   loginWithPassword(account: string, password: string, shareId?: string) {
     return new Observable((observer: Subscriber<LoginSseData>) => {
       (async () => {
@@ -45,15 +138,16 @@ export class UserCaptchaService {
         observer.next({
           data: { message: '正在破解滑块验证码', type: 'success' },
         });
-        // 等待 .vc_captcha_wrapper 下的 iframe 加载完成
-        await page.waitForSelector('iframe');
-        // 获取 iframe
-        const elementHandle = await page.$('iframe');
-        // 获取 iframe 的 contentWindow
-        const frame = await elementHandle.contentFrame();
         try {
+          // 等待 .vc_captcha_wrapper 下的 iframe 加载完成
+          await page.waitForSelector('iframe');
+          // 获取 iframe
+          const elementHandle = await page.$('iframe');
+          // 获取 iframe 的 contentWindow
+          const frame = await elementHandle.contentFrame();
           await this.handleDrag(page, frame);
         } catch (error) {
+          console.log('滑块验证失败', error);
           destroy();
           observer.error({
             data: { message: '滑块验证失败，请重试', type: 'error' },

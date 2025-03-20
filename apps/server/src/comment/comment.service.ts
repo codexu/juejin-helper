@@ -49,7 +49,7 @@ export class CommentService {
     const existComment = await this.commentRepository.findOne({
       where: { content: commentData.content },
     });
-    if (existComment !== undefined) {
+    if (existComment !== null) {
       return false;
     } else {
       await this.commentRepository.save(comment);

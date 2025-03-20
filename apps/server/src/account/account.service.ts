@@ -139,7 +139,7 @@ export class AccountService {
           where: { account: account.account },
         });
         if (!existAccount) {
-          await this.userCaptchaService.loginWithPassword(
+          await this.userCaptchaService.loginWithPasswordOnce(
             account.account,
             account.password,
           );
